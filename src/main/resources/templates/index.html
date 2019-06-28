@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <title>Home</title>
+    <!-- Bootstrap core CSS -->
+    <link href="../static/css/bootstrap.css" rel="stylesheet" th:href="@{/css/bootstrap.css}"/>
+    <link href="../static/css/bootstrap.css" rel="stylesheet" th:href="@{/css/bootstrap-datepicker.min.css}"/>
+</head>
+<body>
+<div id="main">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6"><h4>Bảng theo dõi</h4></div>
+            <div class="col-md-6 text-right"><small><a href="/add">Đóng tiền</a></small></div>
+        </div>
+        <form th:action="@{/}" th:method="GET">
+            <div class="form-group">
+                <label>Ngày :</label>
+                <div class="form-inline">
+                    <div class="input-group date datepicker mydatepicker" data-provide="datepicker">
+                        <input type="text" class="form-control required" name="ngay" th:value="${ngay}"/>
+                        <div class="input-group-addon">
+                            <span class="glyphicon glyphicon-th"></span>
+                        </div>
+                    </div>
+                    <input type="submit" th:value="Lọc" class="btn btn-success btn-sm"/>
+                </div>
+            </div></form>
+        <div class="group-tabs">
+            <!-- Nav tabs -->
+            <ul class="nav nav-tabs">
+                <li class="active"><a class="nav-link active" data-toggle="tab" href="#home">Thu tạm</a></li>
+                <li><a  class="nav-link" data-toggle="tab" href="#menu1">Thu đủ</a></li>
+                <li><a  class="nav-link" data-toggle="tab" href="#menu2">Thu 1 lần</a></li>
+            </ul>
+
+            <!-- Tab panes -->
+            <div class="tab-content">
+                <div role="tabpanel" class="tab-pane in active" id="home">
+                    <table class="table table-bordered table-striped table-hover no-footer dataTable">
+                    <thead>
+                    <tr>
+                        <th class="text-center">Stt</th>
+                        <th class="text-center">Ngày<br>nộp</th>
+                        <th class="text-center">Tháng</th>
+                        <th class="text-center">Họ tên</th>
+                        <th class="text-center">KHÓA HỌC</th>
+                        <th class="text-center">Học phí<br>phải nộp</th>
+                        <th class="text-center">Học phí <br>đã nộp</th>
+                        <th class="text-center">Học phí<br>còn phải nộp</th>
+                        <th class="text-center">Số hóa đơn</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="item : ${thus}">
+                        <td class="text-right" th:text="${item.id}">Id</td>
+                        <td class="text-right" th:text="${#dates.day(item.ngayGioThu)}"></td>
+                        <td class="text-right" th:text="${#dates.month(item.ngayGioThu)}"></td>
+                        <td th:text="${item.hoTen}">Họ tên</td>
+                        <td class="text-center" th:text="${item.lop}">KHÓA HỌC</td>
+                        <td class="text-right" th:text="${#numbers.formatDecimal(item.tienPhaiNop,3, 'POINT',0, 'COMMA')}"></td>
+                        <td class="text-right" th:text="${#numbers.formatDecimal(item.thu,3, 'POINT',0, 'COMMA')}"></td>
+                        <td class="text-right" th:text="${#numbers.formatDecimal(item.tienConLai,3, 'POINT',0, 'COMMA')}"></td>
+                        <td class="text-right"></td>
+                    </tr>
+                    </tbody>
+                </table></div>
+                <div role="tabpanel" class="tab-pane fade" id="menu1">Thu đủ</div>
+                <div role="tabpanel" class="tab-pane fade" id="menu2">Thu 1 lan</div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script th:src="@{/js/bootstrap.js}"></script>
+<script th:src="@{/js/bootstrap-datepicker.min.js}"></script>
+<script th:src="@{/js/common.js}"></script>
+</body>
+</html>

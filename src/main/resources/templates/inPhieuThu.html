@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      style="font-size: 14px;">
+<head>
+    <meta charset="utf-8"/>
+    <title>Phieu thu</title>
+    <!-- Bootstrap core CSS -->
+    <link href="../static/css/bootstrap.css" rel="stylesheet" th:href="@{/css/bootstrap.css}"/>
+    <link href="../static/css/card.css" rel="stylesheet" th:href="@{/css/card.css(t=${#dates.createNow().getTime()})}"/>
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-7 text-center">
+            <strong>CÔNG TY CP VẬN TẢI ÔTÔ & DVTH ĐÀ NẴNG</strong>
+            <p>53 Phan Đăng Lưu - Hải Châu - Đà Nẵng</p>
+        </div>
+        <div class="col-5 text-center">
+            <label class="mb-0">Mẫu số: 01-TT</label>
+            <label class="mb-0">Ban hành theo QĐ 48/2006/QĐ-BTC</label>
+            <label class="mb-0">Ngày 14/9/2006 của Bộ Tài Chính</label>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-9 text-center">
+            <h3><strong>PHIẾU THU</strong></h3>
+            <label th:text="${'Ngày ' + #dates.day(phieuthuModel.ngayGioThu) + ' tháng ' + #dates.month(phieuthuModel.ngayGioThu) + ' năm '+ #dates.year(phieuthuModel.ngayGioThu)}">Ngày 00 tháng 00 năm 2019</label>
+        </div>
+        <div class="col-3 text-right">
+            <strong>34/2019</strong>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-2">
+            <label>Họ và tên :</label>
+        </div>
+        <div class="col-10">
+            <label class="font-weight-bold" th:text="${phieuthuModel.hoTen}"> </label>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-2">
+            <label>Địa chỉ   :</label>
+        </div>
+        <div class="col-10">
+            <label>Đà Nẵng</label>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-2">
+            <label>Lý do    :</label>
+        </div>
+        <div class="col-10">
+            <label th:text="${phieuthuModel.lydo}"></label>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-2">
+            <label>Số tiền  :</label>
+        </div>
+        <div class="col-3">
+            <label th:text="${#numbers.formatInteger(phieuthuModel.thu, 0, 'POINT')}"></label>
+        </div>
+        <div class="col-2">
+            <label>Bằng chữ :</label>
+        </div>
+        <div class="col-3">
+            <label th:text="${phieuthuModel.tienBangChu}"></label>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-2">
+            <label>Kèm theo   : </label>
+        </div>
+        <div class="col-10">
+            <label>Chứng từ gốc</label>
+        </div>
+    </div>
+    <br>
+    <br>
+    <div class="row">
+        <div class="col-4 text-center">
+            <p class="mb-0">THỦ TRƯỞNG ĐƠN VỊ</p>
+            <label>(Ký, họ tên, đóng dấu)</label>
+        </div>
+        <div class="col-4 text-center">
+            <p class="mb-0">KẾ TOÁN TRƯỞNG</p>
+            <span>(Ký, họ tên)</span>
+        </div>
+        <div class="col-4 text-center">
+            <p class="mb-0">NGƯỜI LẬP PHIẾU</p>
+            <span>(Ký, họ tên)</span>
+        </div>
+    </div>
+    <div class="row"><br><br><br></div>
+    <div class="row">
+        <div class="col-4 text-center">
+            <strong>NGƯỜI NỘP TIỀN</strong>
+        </div>
+        <div class="col-4"></div>
+        <div class="col-4 text-center">
+            <p th:text="${'Ngày ' + #dates.day(phieuthuModel.ngayGioThu) + ' tháng ' + #dates.month(phieuthuModel.ngayGioThu) + ' năm '+ #dates.year(phieuthuModel.ngayGioThu)}">Ngày 00 tháng 00 năm 2019</p>
+            <strong> THỦ QUỸ</strong>
+        </div>
+    </div>
+    <div class="row">
+        <hr>
+    </div>
+</div>
+</body>
+</html>
