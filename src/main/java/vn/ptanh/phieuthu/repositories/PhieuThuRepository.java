@@ -12,11 +12,16 @@ import java.util.List;
  * @author tuanhpham.
  */
 public interface PhieuThuRepository extends JpaRepository<PhieuThu, Long> {
-    @Query("SELECT p FROM PhieuThu p WHERE p.ngayGioThu = ?1 ORDER BY id")
-    List<PhieuThu> findByNgayThu(Date ngaytheodoi);
+    /**
+     * Đóng tạm theo ngay
+     * @param ngaytheodoi
+     * @return
+     */
+    @Query("SELECT p FROM PhieuThu p LEFT JOIN p.phieuThu2 p2 WHERE p.ngayGioThu  = ?1 OR p2.ngayGioThu = ?1 ORDER BY p.id")
+    List<PhieuThu> getNhatKy(Date ngaytheodoi);
 
     /**
-     * Đóng tạm theo
+     * Đóng tạm theo ngay
      * @param ngaytheodoi
      * @return
      */
@@ -28,7 +33,7 @@ public interface PhieuThuRepository extends JpaRepository<PhieuThu, Long> {
      * @param ngaytheodoi
      * @return
      */
-    @Query("SELECT p FROM PhieuThu p WHERE p.ngayGioThu = ?1 AND p.thu < p.tienPhaiNop AND p.tienConLai = 0 ORDER BY id")
+    @Query("SELECT p FROM PhieuThu p JOIN p.phieuThu2 p2 WHERE p2.ngayGioThu = ?1 ORDER BY p2.id")
     List<PhieuThu> findByNgayThu2(Date ngaytheodoi);
 
     /**
@@ -45,8 +50,23 @@ public interface PhieuThuRepository extends JpaRepository<PhieuThu, Long> {
      * @param lop
      * @return
      */
-    @Query("SELECT p FROM PhieuThu p LEFT JOIN PhieuThu WHERE (:ten is null OR p.hoTen LIKE %:ten%) AND (:lop is null OR p.lop LIKE %:lop%) AND p.thu < p.tienPhaiNop AND p.tienConLai > 0 " +
-            "AND p.phieuThu2 is null ORDER BY p.id")
+    @Query("SELECT p FROM PhieuThu p LEFT JOIN p.phieuThu2 p2 WHERE (:ten is null OR p.hoTen LIKE %:ten%) AND (:lop is null OR p.lop LIKE %:lop%) AND p.thu < p.tienPhaiNop AND p.tienConLai > 0 " +
+            "AND p2 is null ORDER BY p.id")
     List<PhieuThu> findByDongLan1(@Param("ten")String hoten, @Param("lop")String lop);
 
+
+
+    /**
+     * Đóng đủ lần 1 theo ngày
+     * @return
+     */
+    @Query("SELECT p.lop FROM PhieuThu p WHERE p.lop like '%19' GROUP BY p.lop")
+    List<String> getDSLop();
+
+    /**
+     * Đóng đủ lần 1 theo ngày
+     * @return
+     */
+    @Query("SELECT p FROM PhieuThu p WHERE p.lop like ?1")
+    List<PhieuThu> getDSHocvien(String lop);
 }

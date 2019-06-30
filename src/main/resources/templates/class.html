@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <title>DS học phí theo lớp</title>
+    <!-- Bootstrap core CSS -->
+    <link href="../static/css/bootstrap.css" rel="stylesheet" th:href="@{/css/bootstrap.css}"/>
+    <link href="../static/css/bootstrap.css" rel="stylesheet" th:href="@{/css/bootstrap-datepicker.min.css}"/>
+</head>
+<body>
+<div id="main">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6"><h4>DS học phí theo lớp</h4></div>
+            <div class="col-md-6 text-right">
+                <small class="mr-2"><a href="/add">Đóng tiền</a></small> | <small class="ml-2"><a href="/">DS theo dõi</a></small>
+            </div>
+        </div>
+        <form th:action="@{class}" th:method="GET">
+            <div class="form-group">
+                <label>Khóa học :</label>
+                <div class="form-inline">
+                    <select class="form-control" id="lop" name="lop" th:field="*{lop}">
+                        <option value="">--</option>
+                        <option th:each="lopStr : ${lopList}" th:value="${lopStr}" th:utext="${lopStr}"></option>
+                    </select>
+                    <input type="submit" th:value="Xem" class="btn btn-success btn-sm"/>
+                </div>
+            </div>
+        </form>
+        <div class="group-tabs">
+            <table class="table table-bordered table-striped table-hover no-footer dataTable">
+                <thead>
+                <tr>
+                    <th class="text-center">Stt</th>
+                    <th class="text-center">Họ tên</th>
+                    <th class="text-center">Ngày nộp 1</th>
+                    <th class="text-center">Học phí<br>nộp 1</th>
+                    <th class="text-center">Ngày nộp 2</th>
+                    <th class="text-center">Học phí<br>nộp 2</th>
+                    <th class="text-center">Số hóa đơn</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="item : ${hocvienList}">
+                    <td class="text-right" th:text="${item.id}">Id</td>
+                    <td th:text="${item.hoTen}">Họ tên</td>
+                    <td class="text-right" th:text="${#dates.format(item.ngayGioThu, 'dd/MM/yyyy')}"></td>
+                    <td class="text-right" th:text="${#numbers.formatDecimal(item.thu,3, 'POINT',0, 'COMMA')}"></td>
+                    <td class="text-right" th:text="${item.phieuThu2 != null ? #dates.format(item.phieuThu2.ngayGioThu, 'dd/MM/yyyy') : ''}"></td>
+                    <td class="text-right" th:text="${item.phieuThu2 != null ? #numbers.formatDecimal(item.phieuThu2.thu,3, 'POINT',0, 'COMMA') : ''}"></td>
+                    <td class="text-right"></td>
+                </tr>
+                <tr>
+                    <!--<td class="font-weight-bold" colspan="6">TỔNG CỘNG</td>
+                    <td class="text-right" th:text="${#numbers.formatDecimal(#aggregates.sum(nhatkythuList.![thu]),3,'POINT',0, 'COMMA' )}"></td>
+                    <td colspan="2"></td>-->
+                </tr>
+                </tbody>
+            </table>
+
+        </div>
+        </div>
+    </div>
+</div>
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script th:src="@{/js/bootstrap.js}"></script>
+<script th:src="@{/js/bootstrap-datepicker.min.js}"></script>
+<script th:src="@{/js/common.js}"></script>
+</body>
+</html>

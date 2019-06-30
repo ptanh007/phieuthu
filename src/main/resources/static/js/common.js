@@ -22,26 +22,31 @@ $("#lop").blur(function(event){
         if(lopStr.startsWith("B1TD")) {
             tienthuBanDau("9.500.000");
             console.log("lopBTD");
-        } else if (lopStr.startsWith("B1")>0) {
-            tienthuBanDau("7.000.000");
-        } else if (lopStr.startsWith("B")>0) {
+        } else if (lopStr.startsWith("BC")) {
+            tienthuBanDau("3.000.000");
+        } else if (lopStr.startsWith("BD")) {
+            tienthuBanDau("4.000.000");
+        } else if (lopStr.startsWith("CD")) {
+            tienthuBanDau("3.500.000");
+        } else if (lopStr.startsWith("B")) {
             if(parseInt(lopStr.substr(1,2)) % 2 == 0){
                 tienthuBanDau("7.000.000");
             }else {
                 tienthuBanDau("7.500.000");
             }
-        } else if (lopStr.startsWith("D")>0) {
+        } else if (lopStr.startsWith("D")) {
             tienthuBanDau("10.000.000");
-        } else if (lopStr.startsWith("C")>0) {
-            tienthuBanDau("10.000.000");
+        } else if (lopStr.startsWith("C")) {
+            tienthuBanDau("10.500.000");
         }
     }
 });
 
 $("#thu").blur(function(event){
-    var conlai = $("#tienphainop").val().replace(".","") - $("#thu").val().replace(".","");
+    var conlai = $("#tienphainop").val().replace(/\./g,"") - $("#thu").val().replace(/\./g,"");
+    var conlaiTxt = formatNumber(conlai);
     $("#tienconlai").val(conlai);
-    $("#tienconlaiTxt").text(conlai);
+    $("#tienconlaiTxt").text(conlaiTxt);
 });
 
 function tienthuBanDau(hocphi){
@@ -49,4 +54,8 @@ function tienthuBanDau(hocphi){
     $("#thu").val(hocphi);
     $("#tienconlai").val('0');
     $("#tienconlaiTxt").text('0');
+}
+
+function formatNumber(num) {
+    return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.')
 }

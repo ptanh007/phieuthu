@@ -1,5 +1,6 @@
 package vn.ptanh.phieuthu.models;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,7 +11,10 @@ import java.sql.Timestamp;
  * @author tuanhpham.
  */
 @Setter@Getter
+@AllArgsConstructor
 public class PhieuThuModel {
+    Long stt;
+
     String hoTen;
 
     String ngaySinh;
@@ -22,6 +26,7 @@ public class PhieuThuModel {
     BigDecimal tienPhaiNop;
 
     BigDecimal thu;
+
     String tienBangChu;
 
     BigDecimal tienConLai;

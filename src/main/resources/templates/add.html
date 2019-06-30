@@ -244,6 +244,8 @@
 
     $('#btnSave').on('click', function() {
         var dataReq = $("#invoiceForm").serialize();
+        //replace thoundsand separator
+        dataReq = dataReq.replace(/(\d+)\.(?=\d{3}(\D|$))/g, "$1");
         //TODO validation
 
         // save invoice

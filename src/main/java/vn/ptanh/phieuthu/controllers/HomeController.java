@@ -20,6 +20,7 @@ import vn.ptanh.phieuthu.utils.CommonUtil;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -46,12 +47,35 @@ public class HomeController {
             ngay = new Date();
         }
         log.info("Ngay : {}", ngay);
-        model.addAttribute("thus", phieuThuRepo.findByNgayThu1(ngay));
+        List<PhieuThu> phieuThuList = phieuThuRepo.getNhatKy(ngay);
+
+        model.addAttribute("nhatkythuList", phieuThuList);
+        model.addAttribute("thutamList", phieuThuRepo.findByNgayThu1(ngay));
+        model.addAttribute("thuduList", phieuThuRepo.findByNgayThu2(ngay));
+        model.addAttribute("thu1lanList", phieuThuRepo.findByNgayThu3(ngay));
         //  model.addAttribute("thus", phieuThuRepo.findAll());
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyy");
         model.addAttribute("ngay", sdf.format(ngay));
 
         return "index";
+    }
+
+    @RequestMapping("/class")
+    public String classList(@RequestParam(required = false)String lop, Model model)
+    {
+        if (lop == null){
+            lop = "";
+        }
+        log.info("Lop : {}", lop);
+        model.addAttribute("lop", lop);
+        model.addAttribute("lopList", phieuThuRepo.getDSLop());
+        if(lop == ""){
+            model.addAttribute("hocvienList", new ArrayList<>());
+        } else {
+            model.addAttribute("hocvienList", phieuThuRepo.getDSHocvien(lop));
+        }
+
+        return "class";
     }
 
     /***
@@ -118,15 +142,20 @@ public class HomeController {
 
 
     private PhieuThuModel convertToModel(PhieuThu phieuThu) {
-        PhieuThuModel phieuModel = new PhieuThuModel();
-        phieuModel.setHoTen(phieuThu.getHoTen());
-        phieuModel.setLop(phieuThu.getLop());
-        phieuModel.setTienPhaiNop(phieuThu.getTienPhaiNop());
-        phieuModel.setThu(phieuThu.getThu());
-        phieuModel.setTienBangChu(CommonUtil.tienBangChu(phieuThu.getThu()));
-        phieuModel.setTienConLai(phieuThu.getTienConLai());
-        phieuModel.setNgayGioTao(phieuThu.getNgayGioTao());
-        phieuModel.setNgayGioThu(new Timestamp(phieuThu.getNgayGioThu().getTime()));
+        PhieuThuModel phieuModel = new PhieuThuModel(
+                phieuThu.getId(),
+                phieuThu.getHoTen(),
+                phieuThu.getNgaySinh(),
+                phieuThu.getLop(),
+                "Thu tiền học phí " + phieuThu.getLop(),
+                phieuThu.getTienPhaiNop(),
+                phieuThu.getThu(),
+                CommonUtil.tienBangChu(phieuThu.getThu()),
+                phieuThu.getTienConLai(),
+                false,
+                phieuThu.getNgayGioTao(),
+                new Timestamp(phieuThu.getNgayGioThu().getTime())
+        );
         //TODO
         if (phieuThu.isDeleted()){
            phieuModel.setLydo("Thu tạm tiền học phí " + phieuThu.getLop());
@@ -136,20 +165,63 @@ public class HomeController {
         return phieuModel;
     }
 
-    private PhieuThuModel convertToModel(PhieuThu2 phieuThu) {
-        PhieuThuModel phieuModel = new PhieuThuModel();
-        phieuModel.setHoTen(phieuThu.getHoTen());
-        phieuModel.setLop(phieuThu.getLop());
-        phieuModel.setTienPhaiNop(phieuThu.getTienPhaiNop());
-        phieuModel.setThu(phieuThu.getThu());
-        phieuModel.setTienBangChu(CommonUtil.tienBangChu(phieuThu.getThu()));
-        //phieuModel.setTienConLai(phieuThu.getTienConLai());
-        phieuModel.setNgayGioTao(phieuThu.getNgayGioTao());
-        phieuModel.setNgayGioThu(new Timestamp(phieuThu.getNgayGioThu().getTime()));
+    private PhieuThuModel convertToModel2(PhieuThu2 phieuThu) {
+        return new PhieuThuModel(
+                phieuThu.getId(),
+                phieuThu.getHoTen(),
+                phieuThu.getNgaySinh(),
+                phieuThu.getLop(),
+                "Thu tiền học phí " + phieuThu.getLop(),
+                phieuThu.getTienPhaiNop(),
+                phieuThu.getThu(),
+                CommonUtil.tienBangChu(phieuThu.getThu()),
+                BigDecimal.ZERO,
+                false,
+                phieuThu.getNgayGioTao(),
+                new Timestamp(phieuThu.getNgayGioThu().getTime())
+        );
+    }
 
-        phieuModel.setLydo("Thu tiền học phí " + phieuThu.getLop());
-
-        return phieuModel;
+    private List<PhieuThuModel> convertToNhatKy(List<PhieuThu> phieuThuList, Date ngay) {
+        List<PhieuThuModel> modelList = new ArrayList<>(phieuThuList.size());
+        phieuThuList.forEach( phieuThu -> {
+            if(ngay.equals(phieuThu.getNgayGioThu())) {
+                // thu lan 1
+                PhieuThuModel model = new PhieuThuModel(
+                        phieuThu.getId(),
+                        phieuThu.getHoTen(),
+                        phieuThu.getNgaySinh(),
+                        phieuThu.getLop(),
+                        null,
+                        phieuThu.getTienPhaiNop(),
+                        phieuThu.getThu(),
+                        null,
+                        phieuThu.getTienConLai(),
+                        false,
+                        new Timestamp(phieuThu.getNgayGioThu().getTime()),
+                        phieuThu.getNgayGioTao()
+                        );
+                modelList.add(model);
+            } else {
+                // phieu thu lan 2
+                PhieuThuModel model = new PhieuThuModel(
+                        phieuThu.getId(),
+                        phieuThu.getHoTen(),
+                        phieuThu.getNgaySinh(),
+                        phieuThu.getLop(),
+                        null,
+                        phieuThu.getTienPhaiNop(),
+                        phieuThu.getPhieuThu2().getThu(),
+                        null,
+                        BigDecimal.ZERO,
+                        false,
+                        new Timestamp(phieuThu.getPhieuThu2().getNgayGioThu().getTime()),
+                        phieuThu.getPhieuThu2().getNgayGioTao()
+                );
+                modelList.add(model);
+            }
+        });
+        return modelList;
     }
 
     @RequestMapping("/hoadon2")
@@ -159,19 +231,21 @@ public class HomeController {
 
         //save phieu thu 2
         Timestamp current = new Timestamp(new Date().getTime());
-        PhieuThu2 p2 = new PhieuThu2(p1.getId(),
-                p1.getHoTen(),
-                p1.getNgaySinh(),
-                p1.getLop(),
-                p1.getTienPhaiNop(),
-                p1.getTienConLai(),
-                current,
-                current,
-                null);
+        PhieuThu2 p2 = p1.getPhieuThu2();
+        if(p2 == null) {
+            p2 = new PhieuThu2(p1.getId(),
+                    p1.getHoTen(),
+                    p1.getNgaySinh(),
+                    p1.getLop(),
+                    p1.getTienPhaiNop(),
+                    p1.getTienConLai(),
+                    current,
+                    current);
+        }
         p2 = phieuThu2Repo.save(p2);
 
         //print
-        PhieuThuModel phieuModel = convertToModel(p2);
+        PhieuThuModel phieuModel = convertToModel2(p2);
         phieuModel.setLydo("Thu hoc phi " + p2.getLop());
 
         model.addAttribute("phieuthuModel", phieuModel);

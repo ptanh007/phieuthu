@@ -19,7 +19,8 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PhieuThu {
-    @Id@GeneratedValue
+    @Id
+    @GeneratedValue
     Long id;
 
     String hoTen;
@@ -43,6 +44,7 @@ public class PhieuThu {
 
     Integer stt;
 
-    @OneToOne(mappedBy = "phieuThu")
+    @OneToOne(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
+    @JoinColumn(name="id")
     PhieuThu2 phieuThu2;
 }

@@ -20,6 +20,7 @@ import java.util.Date;
 @AllArgsConstructor
 public class PhieuThu2 {
     @Id
+    @Column(name = "id", nullable = false, unique = true)
     Long id;
 
     @Transient
@@ -36,15 +37,8 @@ public class PhieuThu2 {
 
     BigDecimal thu;
 
-    //Long idLan1;
-
     @Temporal(TemporalType.DATE)
     Date ngayGioThu;
 
     Timestamp ngayGioTao;
-
-    @OneToOne
-    @JoinColumn
-    @MapsId
-    PhieuThu phieuThu;
 }
