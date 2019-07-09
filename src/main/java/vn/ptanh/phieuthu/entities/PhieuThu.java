@@ -42,7 +42,7 @@ public class PhieuThu {
 
     Timestamp ngayGioTao;
 
-    Integer stt;
+    Integer soPhieuThu;
 
     @OneToOne(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
     @JoinColumn(name="id")

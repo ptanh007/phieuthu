@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      style="font-size: 14px;">
+<head>
+    <meta charset="utf-8"/>
+    <title>Error</title>
+    <!-- Bootstrap core CSS -->
+    <link href="../static/css/bootstrap.css" rel="stylesheet" th:href="@{/css/bootstrap.css}"/>
+    <link href="../static/css/card.css" rel="stylesheet" th:href="@{/css/card.css(t=${#dates.createNow().getTime()})}"/>
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-12 alert alert-danger" th:text="${errorMsg}">
+            <strong>Error</strong>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -14,7 +14,7 @@ import java.sql.Timestamp;
 @Setter@Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class PhieuThuModel {
+public class NhatKyModel {
     Long id;
 
     Integer soPhieuThu;
@@ -25,17 +25,18 @@ public class PhieuThuModel {
 
     String lop;
 
-    String lydo;
+    BigDecimal hocPhi;
 
-    BigDecimal tienPhaiNop;
+    BigDecimal tienLan1;
 
-    BigDecimal thu;
+    BigDecimal tienLan2;
 
-    String tienBangChu;
+    BigDecimal tienThu;
 
     BigDecimal tienConLai;
 
-    boolean deleted;
     Timestamp ngayGioThu;
     Timestamp ngayGioTao;
+
+    String soHoaDon;
 }

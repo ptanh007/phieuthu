@@ -27,8 +27,8 @@
             <h3><strong>PHIẾU THU</strong></h3>
             <label th:text="${'Ngày ' + #dates.day(phieuthuModel.ngayGioThu) + ' tháng ' + #dates.month(phieuthuModel.ngayGioThu) + ' năm '+ #dates.year(phieuthuModel.ngayGioThu)}">Ngày 00 tháng 00 năm 2019</label>
         </div>
-        <div class="col-3 text-right">
-            <strong>34/2019</strong>
+        <div class="col-3">
+            <strong th:text="${phieuthuModel.soPhieuThu + '/' + #dates.year(phieuthuModel.ngayGioThu)}"></strong>
         </div>
     </div>
     <div class="row">

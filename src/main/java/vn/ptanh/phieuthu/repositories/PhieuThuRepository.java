@@ -69,4 +69,7 @@ public interface PhieuThuRepository extends JpaRepository<PhieuThu, Long> {
      */
     @Query("SELECT p FROM PhieuThu p WHERE p.lop like ?1")
     List<PhieuThu> getDSHocvien(String lop);
+
+    @Query("SELECT p FROM PhieuThu p LEFT JOIN p.phieuThu2 p2 WHERE NOT p.phieuThu2 is null ORDER BY p.phieuThu2.ngayGioTao")
+    List<PhieuThu> getLatestPhieuThu2(int limit);
 }

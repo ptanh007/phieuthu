@@ -6,7 +6,11 @@
     <title>Bảng theo dõi</title>
     <!-- Bootstrap core CSS -->
     <link href="../static/css/bootstrap.css" rel="stylesheet" th:href="@{/css/bootstrap.css}"/>
-    <link href="../static/css/bootstrap.css" rel="stylesheet" th:href="@{/css/bootstrap-datepicker.min.css}"/>
+    <link href="../static/css/font-awesome.min.css" rel="stylesheet" th:href="@{/css/font-awesome.min.css}"/>
+    <link href="../static/css/bootstrap-datepicker.css" rel="stylesheet" th:href="@{/css/bootstrap-datepicker.min.css}"/>
+    <style>
+        .table th {padding: 0!important;}
+    </style>
 </head>
 <body>
 <div id="main">
@@ -17,7 +21,7 @@
                 <small class="mr-2"><a href="/add">Đóng tiền</a></small> | <small class="ml-2"><a href="/class">DS KHÓA</a></small>
             </div>
         </div>
-        <form th:action="@{/}" th:method="GET">
+        <form id="class" th:action="@{/}" th:method="GET">
             <div class="form-group">
                 <label>Ngày :</label>
                 <div class="form-inline">
@@ -27,14 +31,15 @@
                             <span class="glyphicon glyphicon-th"></span>
                         </div>
                     </div>
-                    <input type="submit" th:value="Lọc" class="btn btn-success btn-sm"/>
+                    <input type="submit" name="search" th:value="Lọc" class="btn btn-success btn-sm"/>
                 </div>
             </div>
         </form>
         <div class="group-tabs">
             <!-- Nav tabs -->
             <ul class="nav nav-tabs">
-                <li class="active"><a class="nav-link active" data-toggle="tab" href="#nhatkythu">Nhật ký thu</a></li>
+                <li class="active"><a class="nav-link active" data-toggle="tab" href="#nhatkythu2">Nhật ký thu</a></li>
+                <!--<li><a class="nav-link" data-toggle="tab" href="#nhatkythu">Nhật ký thu</a></li>-->
                 <li><a class="nav-link" data-toggle="tab" href="#home">Thu tạm</a></li>
                 <li><a  class="nav-link" data-toggle="tab" href="#menu1">Thu đủ</a></li>
                 <li><a  class="nav-link" data-toggle="tab" href="#menu2">Thu 1 lần</a></li>
@@ -42,55 +47,71 @@
 
             <!-- Tab panes -->
             <div class="tab-content">
-                <div role="tabpanel" class="tab-pane in active" id="nhatkythu">
-                    <!--nhat ky thu-->
+                <div role="tabpanel" class="tab-pane in active" id="nhatkythu2">
+                    <!--nhat ky thu2-->
                     <table class="table table-bordered table-striped table-hover no-footer dataTable">
                         <thead>
                         <tr>
                             <th class="text-center">Stt</th>
                             <th class="text-center">Ngày<br>nộp</th>
-                            <th class="text-center">Tháng</th>
+                            <th class="text-center">Thg</th>
                             <th class="text-center">Họ tên</th>
-                            <th class="text-center">KHÓA HỌC</th>
-                            <th class="text-center">Học phí<br>phải nộp</th>
-                            <th class="text-center">Học phí <br>đã nộp</th>
-                            <th class="text-center">Học phí<br>còn phải nộp</th>
+                            <th class="text-center">KHÓA<br/>HỌC</th>
+                            <th class="text-center">P.thu </th>
+                            <th class="text-center">Học phí</th>
+                            <th class="text-center">Nộplần1<br/>(Nộp tạm)</th>
+                            <th class="text-center">Còn lại</th>
+                            <th class="text-center">Nộplần2</th>
+                            <th class="text-center">Nộp1lần</th>
                             <th class="text-center">Số hóa đơn</th>
                         </tr>
                         </thead>
                         <tbody>
-                        <tr th:each="item : ${nhatkythuList}">
+                        <tr th:each="item : ${nhatkythu2List}">
                             <td class="text-right" th:text="${item.id}">Id</td>
                             <td class="text-right" th:text="${#dates.day(item.ngayGioThu)}"></td>
                             <td class="text-right" th:text="${#dates.month(item.ngayGioThu)}"></td>
                             <td th:text="${item.hoTen}">Họ tên</td>
                             <td class="text-center" th:text="${item.lop}">KHÓA HỌC</td>
-                            <td class="text-right" th:text="${#numbers.formatDecimal(item.tienPhaiNop,3, 'POINT',0, 'COMMA')}"></td>
-                            <td class="text-right" th:text="${#numbers.formatDecimal(item.thu,3, 'POINT',0, 'COMMA')}"></td>
-                            <td class="text-right" th:text="${#numbers.formatDecimal(item.tienConLai,3, 'POINT',0, 'COMMA')}"></td>
-                            <td class="text-right"></td>
+                            <td class="text-right" th:text="${item.soPhieuThu}">Id</td>
+                            <td class="text-right" th:text="${#numbers.formatDecimal(item.hocPhi,0, 'POINT',0, 'COMMA')}"></td>
+                            <td class="text-right pb-0" th:classappend="${item.isThuLan2()?'text-muted':''}">
+                                <label class="mb-0" th:text="${#numbers.formatDecimal(item.tienLan1,0, 'POINT',0, 'COMMA')}"></label>
+                                <br/>
+                                <small th:if="${item.isThuLan2()}" th:text="${#dates.format(item.ngayGioThu1,'dd.MM.yyyy')}"></small>
+                            </td>
+                            <td class="text-right" th:text="${#numbers.formatDecimal(item.tienConLai,0, 'POINT',0, 'COMMA')}"></td>
+                            <td class="text-right" th:text="${#numbers.formatDecimal(item.tienLan2,0, 'POINT',0, 'COMMA')}"></td>
+                            <td class="text-right" th:text="${#numbers.formatDecimal(item.tien1Lan,0, 'POINT',0, 'COMMA')}"></td>
+                            <td class="text-right">
+
+                            </td>
                         </tr>
                         <tr>
-                            <td class="font-weight-bold" colspan="6">TỔNG CỘNG</td>
-                            <td class="text-right" th:text="${#numbers.formatDecimal(#aggregates.sum(nhatkythuList.![thu]),3,'POINT',0, 'COMMA' )}"></td>
-                            <td colspan="2"></td>
+                            <td class="font-weight-bold" colspan="7">TỔNG CỘNG</td>
+                            <td class="text-right" th:text="${#numbers.formatDecimal(sumTienLan1,0,'POINT',0, 'COMMA' )}"></td>
+                            <td></td>
+                            <td class="text-right" th:text="${#numbers.formatDecimal(sumTienLan2,0,'POINT',0, 'COMMA' )}"></td>
+                            <td class="text-right" th:text="${#numbers.formatDecimal(sumTien1Lan,0,'POINT',0, 'COMMA' )}"></td>
+                            <td class="text-right" th:text="${#numbers.formatDecimal(sumTongTien,0,'POINT',0, 'COMMA' )}"></td>
                         </tr>
                         </tbody>
                     </table>
                 </div>
-                <div role="tabpanel" class="tab-pane fade" id="home">
-                    <!--thu tam-->
+                <!--<div role="tabpanel" class="tab-pane fade" id="home">
+                    &lt;!&ndash;thu tam&ndash;&gt;
                     <table class="table table-bordered table-striped table-hover no-footer dataTable">
                         <thead>
                         <tr>
                             <th class="text-center">Stt</th>
                             <th class="text-center">Ngày<br>nộp</th>
-                            <th class="text-center">Tháng</th>
+                            <th class="text-center">Thg</th>
                             <th class="text-center">Họ tên</th>
-                            <th class="text-center">KHÓA HỌC</th>
-                            <th class="text-center">Học phí<br>phải nộp</th>
-                            <th class="text-center">Học phí <br>đã nộp</th>
-                            <th class="text-center">Học phí<br>còn phải nộp</th>
+                            <th class="text-center">KHÓA<br/>HỌC</th>
+                            <th class="text-center">P.thu </th>
+                            <th class="text-center">Học phí</th>
+                            <th class="text-center">Tiền thu</th>
+                            <th class="text-center">Còn lại</th>
                             <th class="text-center">Số hóa đơn</th>
                         </tr>
                         </thead>
@@ -101,19 +122,22 @@
                             <td class="text-right" th:text="${#dates.month(item.ngayGioThu)}"></td>
                             <td th:text="${item.hoTen}">Họ tên</td>
                             <td class="text-center" th:text="${item.lop}">KHÓA HỌC</td>
-                            <td class="text-right" th:text="${#numbers.formatDecimal(item.tienPhaiNop,3, 'POINT',0, 'COMMA')}"></td>
-                            <td class="text-right" th:text="${#numbers.formatDecimal(item.thu,3, 'POINT',0, 'COMMA')}"></td>
-                            <td class="text-right" th:text="${#numbers.formatDecimal(item.tienConLai,3, 'POINT',0, 'COMMA')}"></td>
-                            <td class="text-right"></td>
+                            <td class="text-right" th:text="${item.soPhieuThu}">phieu_thu</td>
+                            <td class="text-right" th:text="${#numbers.formatDecimal(item.tienPhaiNop,0, 'POINT',0, 'COMMA')}"></td>
+                            <td class="text-right" th:text="${#numbers.formatDecimal(item.thu,0, 'POINT',0, 'COMMA')}"></td>
+                            <td class="text-right" th:text="${#numbers.formatDecimal(item.tienConLai,0, 'POINT',0, 'COMMA')}"></td>
+                            <td class="text-right">
+                                <a th:href="${'/phieuthu?id=' + item.id}" target="_blank"><i class="fa fa-file"></i></a>
+                            </td>
                         </tr>
                         <tr>
-                            <td class="font-weight-bold" colspan="6">TỔNG CỘNG</td>
+                            <td class="font-weight-bold" colspan="7">TỔNG CỘNG</td>
                             <td class="text-right" th:text="${#numbers.formatDecimal(#aggregates.sum(thutamList.![thu]),3,'POINT',0, 'COMMA' )}"></td>
                             <td colspan="2"></td>
                         </tr>
                         </tbody>
                     </table>
-                </div>
+                </div>-->
                 <div role="tabpanel" class="tab-pane fade" id="menu1">
                     <!-- Thu lan 2-->
                     <table class="table table-bordered table-striped table-hover no-footer dataTable">
@@ -121,9 +145,10 @@
                         <tr>
                             <th class="text-center">Stt</th>
                             <th class="text-center">Ngày<br>nộp</th>
-                            <th class="text-center">Tháng</th>
+                            <th class="text-center">Thg</th>
                             <th class="text-center">Họ tên</th>
-                            <th class="text-center">KHÓA HỌC</th>
+                            <th class="text-center">KHÓA<br/>HỌC</th>
+                            <th class="text-center">P.thu </th>
                             <th class="text-center">Thu lần 1</th>
                             <th class="text-center">Thu lần 2</th>
                             <th class="text-center">Tổng cộng</th>
@@ -137,13 +162,16 @@
                             <td class="text-right" th:text="${#dates.month(item.ngayGioThu)}"></td>
                             <td th:text="${item.hoTen}">Họ tên</td>
                             <td class="text-center" th:text="${item.lop}">KHÓA HỌC</td>
-                            <td class="text-right" th:text="${#numbers.formatDecimal(item.thu,3, 'POINT',0, 'COMMA')}"></td>
-                            <td class="text-right" th:text="${#numbers.formatDecimal(item.phieuThu2.thu,3, 'POINT',0, 'COMMA')}"></td>
-                            <td class="text-right" th:text="${#numbers.formatDecimal(item.tienPhaiNop,3, 'POINT',0, 'COMMA')}"></td>
-                            <td class="text-right"></td>
+                            <td class="text-right" th:text="${item.soPhieuThu}">phieu_thu</td>
+                            <td class="text-right" th:text="${#numbers.formatDecimal(item.thu,0, 'POINT',0, 'COMMA')}"></td>
+                            <td class="text-right" th:text="${#numbers.formatDecimal(item.phieuThu2.thu,0, 'POINT',0, 'COMMA')}"></td>
+                            <td class="text-right" th:text="${#numbers.formatDecimal(item.tienPhaiNop,0, 'POINT',0, 'COMMA')}"></td>
+                            <td class="text-right">
+                                <a th:href="${'/phieuthu2?id=' + item.id}" target="_blank"><i class="fa fa-file"></i></a>
+                            </td>
                         </tr>
                         <tr>
-                            <td class="font-weight-bold" colspan="6">TỔNG CỘNG</td>
+                            <td class="font-weight-bold" colspan="7">TỔNG CỘNG</td>
                             <td class="text-right" th:text="${#numbers.formatDecimal(#aggregates.sum(thuduList.![phieuThu2.thu]),3,'POINT',0, 'COMMA' )}"></td>
                             <td colspan="2"></td>
                         </tr>
@@ -157,12 +185,13 @@
                         <tr>
                             <th class="text-center">Stt</th>
                             <th class="text-center">Ngày<br>nộp</th>
-                            <th class="text-center">Tháng</th>
+                            <th class="text-center">Thg</th>
                             <th class="text-center">Họ tên</th>
-                            <th class="text-center">KHÓA HỌC</th>
-                            <th class="text-center">Học phí<br>phải nộp</th>
-                            <th class="text-center">Học phí <br>đã nộp</th>
-                            <th class="text-center">Học phí<br>còn phải nộp</th>
+                            <th class="text-center">KHÓA<br/>HỌC</th>
+                            <th class="text-center">P.thu </th>
+                            <th class="text-center">Học phí</th>
+                            <th class="text-center"></th>
+                            <th class="text-center">Tiền thu</th>
                             <th class="text-center">Số hóa đơn</th>
                         </tr>
                         </thead>
@@ -173,15 +202,18 @@
                             <td class="text-right" th:text="${#dates.month(item.ngayGioThu)}"></td>
                             <td th:text="${item.hoTen}">Họ tên</td>
                             <td class="text-center" th:text="${item.lop}">KHÓA HỌC</td>
-                            <td class="text-right" th:text="${#numbers.formatDecimal(item.tienPhaiNop,3, 'POINT',0, 'COMMA')}"></td>
-                            <td class="text-right" th:text="${#numbers.formatDecimal(item.thu,3, 'POINT',0, 'COMMA')}"></td>
-                            <td class="text-right" th:text="${#numbers.formatDecimal(item.tienConLai,3, 'POINT',0, 'COMMA')}"></td>
+                            <td class="text-right" th:text="${item.soPhieuThu}"></td>
+                            <td class="text-right" th:text="${#numbers.formatDecimal(item.tienPhaiNop,0, 'POINT',0, 'COMMA')}"></td>
                             <td class="text-right"></td>
+                            <td class="text-right" th:text="${#numbers.formatDecimal(item.thu,0, 'POINT',0, 'COMMA')}"></td>
+                            <td class="text-right">
+                                <a th:href="${'/phieuthu?id=' + item.id}" target="_blank"><i class="fa fa-file"></i></a>
+                            </td>
                         </tr>
                         <tr>
-                            <td class="font-weight-bold" colspan="6">TỔNG CỘNG</td>
+                            <td class="font-weight-bold" colspan="8">TỔNG CỘNG</td>
                             <td class="text-right" th:text="${#numbers.formatDecimal(#aggregates.sum(thu1lanList.![thu]),3,'POINT',0, 'COMMA' )}"></td>
-                            <td colspan="2"></td>
+                            <td colspan="1"></td>
                         </tr>
                         </tbody>
                     </table>

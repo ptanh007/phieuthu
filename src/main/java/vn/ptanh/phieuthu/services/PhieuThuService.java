@@ -25,7 +25,7 @@ public class PhieuThuService {
         yearSequence.setNextVal(yearSequence.getNextVal()+1);
         sequenceRepo.save(yearSequence);
 
-        phieuThu.setStt(yearSequence.getNextVal());
+        phieuThu.setSoPhieuThu(yearSequence.getNextVal());
         phieuThuRepos.save(phieuThu);
 
         return phieuThu;

@@ -35,15 +35,15 @@
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label>Ngày sinh:</label>
-                            <input type="text" class="form-control date datepicker mydatepicker" data-provide="datepicker" th:value="*{ngaySinh}" name="ngaySinh"/>
-                            <div class="input-group-addon">
+                            <input type="text" class="form-control" th:value="*{ngaySinh}" name="ngaySinh" maxlength="4"/>
+                            <!--<div class="input-group-addon">
                                 <span class="glyphicon glyphicon-th"></span>
-                            </div>
+                            </div>-->
                         </div>
                     </div>
                     <div>
                         <button type="submit" name="action" value="search" class="btn btn-primary">Tìm kiếm</button>
-                        <button type="reset" value="Reset" class="btn btn-secondary">Reset</button>
+                        <button value="add" class="btn btn-secondary" onclick="window.location.href='/add'">Reset</button>
                     </div>
                 </div>
                 <div class="col-md-4 order-md-2 mb-4">
@@ -61,7 +61,7 @@
                                 <h6 class="my-0">Tiền nộp</h6>
                                 <!--<small class="text-muted">Brief description</small>-->
                             </div>
-                            <input type="text" class="text-muted text-right money  " name="thu" id="thu"></input>
+                            <input type="text" class="text-muted text-right money" name="thu" id="thu"/>
                         </li>
                         <li class="list-group-item d-flex justify-content-between lh-condensed">
                             <div>
@@ -97,9 +97,9 @@
                         <td class="text-right" th:text="${#dates.format(item.ngayGioThu,'dd.MM.yyyy')}"></td>
                         <td th:text="${item.hoTen}">Họ tên</td>
                         <td class="text-center" th:text="${item.lop}">KHÓA HỌC</td>
-                        <td class="text-right" th:text="${#numbers.formatDecimal(item.tienPhaiNop,3, 'POINT',0, 'COMMA')}"></td>
-                        <td class="text-right" th:text="${#numbers.formatDecimal(item.thu,3, 'POINT',0, 'COMMA')}"></td>
-                        <td class="text-right" th:text="${#numbers.formatDecimal(item.tienConLai,3, 'POINT',0, 'COMMA')}"></td>
+                        <td class="text-right" th:text="${#numbers.formatDecimal(item.tienPhaiNop,0, 'POINT',0, 'COMMA')}"></td>
+                        <td class="text-right" th:text="${#numbers.formatDecimal(item.thu,0, 'POINT',0, 'COMMA')}"></td>
+                        <td class="text-right" th:text="${#numbers.formatDecimal(item.tienConLai,0, 'POINT',0, 'COMMA')}"></td>
                         <td class="text-center">
                             <a class="complete">click</span></a>
                         </td>
@@ -119,10 +119,10 @@
                     <tr th:each="item : ${latest}">
                         <td class="small"
                             th:text="${#numbers.formatInteger(item.id,4)} + '|' +
-                    ${#dates.format(item.ngayGioThu,'dd.MM.yyyy')} + '|' +
+                    ${#dates.format(item.ngayGioTao,'yyyy.MM.dd HH:mm')} + '|' +
                     ${item.hoTen} + '|' +
                     ${item.lop} + '|' +
-                    ${#numbers.formatDecimal(item.thu,3, 'POINT',0, 'COMMA')}">Id</td>
+                    ${#numbers.formatDecimal(item.thu,0, 'POINT',0, 'COMMA')}">Id</td>
                     </tr>
                     </tbody>
                 </table>
@@ -230,6 +230,14 @@
 
     $('input.money').mask('000.000.000.000', {reverse: true});
 
+    $('#invoiceForm input[name*=ngaySinh]').on('keypress', function(e) {
+        var charCode = (e.which) ? e.which : event.keyCode
+        if (charCode < 48 || charCode > 57) {
+            return false;
+        }
+        return true;
+    });
+
     $('#btnAdd').on('click', function() {
         $('#reportRegistMessage').hide();
         $('#modalRegistInvoice label[name*=lopTxt]').text($("#invoiceForm input[name*=lop]").val());
@@ -265,11 +273,11 @@
     $("#notCompleteTable").on("click", "a.complete", function(event) {
         var rowData = $(this).closest('td').siblings();
         idNopTienLan2 = rowData[0].innerHTML;
-
-        console.log(rowData);
-        console.log(idNopTienLan2);
-
-        var confirmStr = "Tạo hóa đơn lần 2 của Học viên: " + rowData[2].innerHTML + ",Lớp: " + rowData[3].innerHTML + "?";
+        var sotien = rowData[6].innerHTML;
+        var lopStr = rowData[3].innerHTML;
+        var confirmStr = 'Tạo hóa đơn lần 2 của Học viên: ' + rowData[2].innerHTML
+            + '<br/> Lớp: <strong> ' + lopStr
+            + '</strong><br/> Số tiền : <strong>'+ sotien + "</strong> ?";
 
         $("#confirmTitle").html("Xác nhận đóng tiền lần 2");
         $("#confirmMessage").html(confirmStr);
@@ -284,7 +292,6 @@
 
     function completeSecondPayment(id){
         window.open('hoadon2?id='+id, '_blank');
-
     }
 
 </script>
