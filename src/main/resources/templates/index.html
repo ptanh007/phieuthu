@@ -40,9 +40,9 @@
             <ul class="nav nav-tabs">
                 <li class="active"><a class="nav-link active" data-toggle="tab" href="#nhatkythu2">Nhật ký thu</a></li>
                 <!--<li><a class="nav-link" data-toggle="tab" href="#nhatkythu">Nhật ký thu</a></li>-->
-                <li><a class="nav-link" data-toggle="tab" href="#home">Thu tạm</a></li>
-                <li><a  class="nav-link" data-toggle="tab" href="#menu1">Thu đủ</a></li>
-                <li><a  class="nav-link" data-toggle="tab" href="#menu2">Thu 1 lần</a></li>
+                <li><a class="nav-link" data-toggle="tab" href="#home">Bảng 1</a></li>
+                <li><a  class="nav-link" data-toggle="tab" href="#menu1">Bảng 2</a></li>
+                <!--<li><a  class="nav-link" data-toggle="tab" href="#menu2">Thu 1 lần</a></li>-->
             </ul>
 
             <!-- Tab panes -->
@@ -88,18 +88,20 @@
                             </td>
                         </tr>
                         <tr>
-                            <td class="font-weight-bold" colspan="7">TỔNG CỘNG</td>
+                            <td class="font-weight-bold" colspan="5">TỔNG CỘNG</td>
+                            <td class="text-right" th:text="${#numbers.formatDecimal(sumTongTien,0,'POINT',0, 'COMMA' )}"></td>
+                            <td></td>
                             <td class="text-right" th:text="${#numbers.formatDecimal(sumTienLan1,0,'POINT',0, 'COMMA' )}"></td>
                             <td></td>
                             <td class="text-right" th:text="${#numbers.formatDecimal(sumTienLan2,0,'POINT',0, 'COMMA' )}"></td>
                             <td class="text-right" th:text="${#numbers.formatDecimal(sumTien1Lan,0,'POINT',0, 'COMMA' )}"></td>
-                            <td class="text-right" th:text="${#numbers.formatDecimal(sumTongTien,0,'POINT',0, 'COMMA' )}"></td>
+                            <td></td>
                         </tr>
                         </tbody>
                     </table>
                 </div>
-                <!--<div role="tabpanel" class="tab-pane fade" id="home">
-                    &lt;!&ndash;thu tam&ndash;&gt;
+                <div role="tabpanel" class="tab-pane fade" id="home">
+                    <!--thu tam-->
                     <table class="table table-bordered table-striped table-hover no-footer dataTable">
                         <thead>
                         <tr>
@@ -110,76 +112,85 @@
                             <th class="text-center">KHÓA<br/>HỌC</th>
                             <th class="text-center">P.thu </th>
                             <th class="text-center">Học phí</th>
-                            <th class="text-center">Tiền thu</th>
+                            <th class="text-center">Tiền tạm</th>
                             <th class="text-center">Còn lại</th>
+                            <th class="text-center">Thu 1 lần</th>
                             <th class="text-center">Số hóa đơn</th>
                         </tr>
                         </thead>
                         <tbody>
-                        <tr th:each="item : ${thutamList}">
+                        <tr th:each="item : ${bang1List}">
                             <td class="text-right" th:text="${item.id}">Id</td>
                             <td class="text-right" th:text="${#dates.day(item.ngayGioThu)}"></td>
                             <td class="text-right" th:text="${#dates.month(item.ngayGioThu)}"></td>
                             <td th:text="${item.hoTen}">Họ tên</td>
                             <td class="text-center" th:text="${item.lop}">KHÓA HỌC</td>
                             <td class="text-right" th:text="${item.soPhieuThu}">phieu_thu</td>
-                            <td class="text-right" th:text="${#numbers.formatDecimal(item.tienPhaiNop,0, 'POINT',0, 'COMMA')}"></td>
-                            <td class="text-right" th:text="${#numbers.formatDecimal(item.thu,0, 'POINT',0, 'COMMA')}"></td>
+                            <td class="text-right" th:text="${#numbers.formatDecimal(item.hocPhi,0, 'POINT',0, 'COMMA')}"></td>
+                            <td class="text-right" th:text="${#numbers.formatDecimal(item.tienLan1,0, 'POINT',0, 'COMMA')}"></td>
                             <td class="text-right" th:text="${#numbers.formatDecimal(item.tienConLai,0, 'POINT',0, 'COMMA')}"></td>
+                            <td class="text-right" th:text="${#numbers.formatDecimal(item.tien1Lan,0, 'POINT',0, 'COMMA')}"></td>
                             <td class="text-right">
                                 <a th:href="${'/phieuthu?id=' + item.id}" target="_blank"><i class="fa fa-file"></i></a>
                             </td>
                         </tr>
                         <tr>
-                            <td class="font-weight-bold" colspan="7">TỔNG CỘNG</td>
-                            <td class="text-right" th:text="${#numbers.formatDecimal(#aggregates.sum(thutamList.![thu]),3,'POINT',0, 'COMMA' )}"></td>
-                            <td colspan="2"></td>
+                            <td class="font-weight-bold" colspan="6">TỔNG CỘNG</td>
+                            <td class="text-right" th:text="${#numbers.formatDecimal(#aggregates.sum(bang1List.![hocPhi?:0]),3,'POINT',0, 'COMMA' )}"></td>
+                            <td class="text-right" th:text="${#numbers.formatDecimal(#aggregates.sum(bang1List.![tienLan1?:0]),3,'POINT',0, 'COMMA' )}"></td>
+                            <td class="text-right" th:text="${#numbers.formatDecimal(#aggregates.sum(bang1List.![tienConLai?:0]),3,'POINT',0, 'COMMA' )}"></td>
+                            <td class="text-right" th:text="${#numbers.formatDecimal(#aggregates.sum(bang1List.![tien1Lan?:0]),3,'POINT',0, 'COMMA' )}"></td>
+                            <td></td>
                         </tr>
                         </tbody>
                     </table>
-                </div>-->
+                </div>
                 <div role="tabpanel" class="tab-pane fade" id="menu1">
                     <!-- Thu lan 2-->
                     <table class="table table-bordered table-striped table-hover no-footer dataTable">
                         <thead>
                         <tr>
-                            <th class="text-center">Stt</th>
+                            <!--<th class="text-center">Stt</th>-->
+                            <th class="text-center">P.thu </th>
                             <th class="text-center">Ngày<br>nộp</th>
                             <th class="text-center">Thg</th>
                             <th class="text-center">Họ tên</th>
                             <th class="text-center">KHÓA<br/>HỌC</th>
-                            <th class="text-center">P.thu </th>
-                            <th class="text-center">Thu lần 1</th>
+                            <th class="text-center">Học phí</th>
+                            <th class="text-center">Đã lần 1</th>
+                            <th class="text-center">Còn lại</th>
                             <th class="text-center">Thu lần 2</th>
-                            <th class="text-center">Tổng cộng</th>
+                            <!--<th class="text-center">Tổng cộng</th>-->
                             <th class="text-center">Số hóa đơn</th>
                         </tr>
                         </thead>
                         <tbody>
-                        <tr th:each="item : ${thuduList}">
-                            <td class="text-right" th:text="${item.id}">Id</td>
-                            <td class="text-right" th:text="${#dates.day(item.ngayGioThu)}"></td>
-                            <td class="text-right" th:text="${#dates.month(item.ngayGioThu)}"></td>
+                        <tr th:each="item : ${bang2List}">
+                            <!--<td class="text-right" th:text="${item.id}">Id</td>-->
+                            <td class="text-right" th:text="${item.soPhieuThu}">phieu_thu</td>
+                            <td class="text-right" th:text="${#dates.day(item.phieuThu2.ngayGioThu)}"></td>
+                            <td class="text-right" th:text="${#dates.month(item.phieuThu2.ngayGioThu)}"></td>
                             <td th:text="${item.hoTen}">Họ tên</td>
                             <td class="text-center" th:text="${item.lop}">KHÓA HỌC</td>
-                            <td class="text-right" th:text="${item.soPhieuThu}">phieu_thu</td>
-                            <td class="text-right" th:text="${#numbers.formatDecimal(item.thu,0, 'POINT',0, 'COMMA')}"></td>
-                            <td class="text-right" th:text="${#numbers.formatDecimal(item.phieuThu2.thu,0, 'POINT',0, 'COMMA')}"></td>
                             <td class="text-right" th:text="${#numbers.formatDecimal(item.tienPhaiNop,0, 'POINT',0, 'COMMA')}"></td>
+                            <td class="text-right" th:text="${#numbers.formatDecimal(item.thu,0, 'POINT',0, 'COMMA')}"></td>
+                            <td class="text-right" th:text="${#numbers.formatDecimal(item.tienConLai,0, 'POINT',0, 'COMMA')}"></td>
+                            <td class="text-right" th:text="${#numbers.formatDecimal(item.phieuThu2.thu,0, 'POINT',0, 'COMMA')}"></td>
+                            <!--<td class="text-right" th:text="${#numbers.formatDecimal(item.tienPhaiNop,0, 'POINT',0, 'COMMA')}"></td>-->
                             <td class="text-right">
                                 <a th:href="${'/phieuthu2?id=' + item.id}" target="_blank"><i class="fa fa-file"></i></a>
                             </td>
                         </tr>
                         <tr>
                             <td class="font-weight-bold" colspan="7">TỔNG CỘNG</td>
-                            <td class="text-right" th:text="${#numbers.formatDecimal(#aggregates.sum(thuduList.![phieuThu2.thu]),3,'POINT',0, 'COMMA' )}"></td>
+                            <td class="text-right" th:text="${#numbers.formatDecimal(#aggregates.sum(bang2List.![phieuThu2.thu]),3,'POINT',0, 'COMMA' )}"></td>
                             <td colspan="2"></td>
                         </tr>
                         </tbody>
                     </table>
                 </div>
-                <div role="tabpanel" class="tab-pane fade" id="menu2">
-                    <!-- Thu 1 lan-->
+                <!--<div role="tabpanel" class="tab-pane fade" id="menu2">
+                    &lt;!&ndash; Thu 1 lan&ndash;&gt;
                     <table class="table table-bordered table-striped table-hover no-footer dataTable">
                         <thead>
                         <tr>
@@ -217,7 +228,7 @@
                         </tr>
                         </tbody>
                     </table>
-                </div>
+                </div>-->
             </div>
         </div>
     </div>

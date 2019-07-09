@@ -44,6 +44,14 @@ public interface PhieuThuRepository extends JpaRepository<PhieuThu, Long> {
     @Query("SELECT p FROM PhieuThu p WHERE p.ngayGioThu = ?1 AND p.thu = p.tienPhaiNop AND p.tienConLai = 0 ORDER BY id")
     List<PhieuThu> findByNgayThu3(Date ngaytheodoi);
 
+
+    /**
+     * Đóng tạm & 1 lần theo ng
+     * @param ngaytheodoi
+     * @return
+     */
+    @Query("SELECT p FROM PhieuThu p WHERE p.ngayGioThu  = ?1 ORDER BY id")
+    List<PhieuThu> findByNgayThu(Date ngaytheodoi);
     /**
      * DS Đóng tạm
      * @param hoten

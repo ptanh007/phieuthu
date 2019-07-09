@@ -78,9 +78,10 @@ public class HomeController {
         model.addAttribute("sumTien1Lan", nop1lanSum);
         model.addAttribute("sumTongTien", tongTien);
 
-        model.addAttribute("thutamList", phieuThuRepo.findByNgayThu1(ngay));
-        model.addAttribute("thuduList", phieuThuRepo.findByNgayThu2(ngay));
-        model.addAttribute("thu1lanList", phieuThuRepo.findByNgayThu3(ngay));
+        List<NhatKy2Model> bang1List = convertToNhatKy3(phieuThuRepo.findByNgayThu(ngay),ngay);
+        model.addAttribute("bang1List", bang1List);
+        model.addAttribute("bang2List", phieuThuRepo.findByNgayThu2(ngay));
+        //model.addAttribute("thu1lanList", phieuThuRepo.findByNgayThu3(ngay));
 
         return "index";
     }
@@ -359,6 +360,40 @@ public class HomeController {
                         phieuThu.getPhieuThu2().getNgayGioTao(),
                         true,
                         new Timestamp(phieuThu.getNgayGioThu().getTime()),
+                        null
+                );
+                modelList.add(model);
+            }
+        });
+        return modelList;
+    }
+
+    /**
+     *
+     * @param phieuThuList
+     * @param ngay
+     * @return
+     */
+    private List<NhatKy2Model> convertToNhatKy3(List<PhieuThu> phieuThuList, Date ngay) {
+        List<NhatKy2Model> modelList = new ArrayList<>();
+        phieuThuList.forEach( phieuThu -> {
+            if (ngay.equals(phieuThu.getNgayGioThu())) {
+                // thu lan 1
+                NhatKy2Model model = new NhatKy2Model(
+                        phieuThu.getId(),
+                        phieuThu.getSoPhieuThu(),
+                        phieuThu.getHoTen(),
+                        phieuThu.getNgaySinh(),
+                        phieuThu.getLop(),
+                        phieuThu.getTienPhaiNop(),
+                        phieuThu.getTienPhaiNop().equals(phieuThu.getThu()) ? null : phieuThu.getThu(),  //hocphi=thu, lan1=0
+                        null,
+                        BigDecimal.ZERO.equals(phieuThu.getTienConLai()) ? null : phieuThu.getTienConLai(),
+                        phieuThu.getTienPhaiNop().equals(phieuThu.getThu()) ? phieuThu.getThu() : null,  //hocphi=thu, lan2=thu
+                        new Timestamp(phieuThu.getNgayGioThu().getTime()),
+                        phieuThu.getNgayGioTao(),
+                        false,
+                        null,
                         null
                 );
                 modelList.add(model);
