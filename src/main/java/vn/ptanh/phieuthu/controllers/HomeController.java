@@ -79,9 +79,13 @@ public class HomeController {
         model.addAttribute("sumTongTien", tongTien);
 
         List<NhatKy2Model> bang1List = convertToNhatKy3(phieuThuRepo.findByNgayThu(ngay),ngay);
+        BigDecimal tongTienThuTam = bang1List.stream().map(NhatKy2Model::getTienLan1).filter(Objects::nonNull).reduce(BigDecimal.ZERO, BigDecimal::add);
+        BigDecimal tongTien1Lan = bang1List.stream().map(NhatKy2Model::getTien1Lan).filter(Objects::nonNull).reduce(BigDecimal.ZERO, BigDecimal::add);
+        model.addAttribute("bang1SumThuTam", tongTienThuTam);
+        model.addAttribute("bang1Sum1Lan", tongTien1Lan);
+        model.addAttribute("bang1Sum", tongTien1Lan.add(tongTienThuTam));
         model.addAttribute("bang1List", bang1List);
         model.addAttribute("bang2List", phieuThuRepo.findByNgayThu2(ngay));
-        //model.addAttribute("thu1lanList", phieuThuRepo.findByNgayThu3(ngay));
 
         return "index";
     }

@@ -21,11 +21,11 @@
             <div class="form-group">
                 <label>Khóa học :</label>
                 <div class="form-inline">
-                    <select class="form-control" id="lop" name="lop" th:field="*{lop}">
+                    <select class="form-control" id="lop" name="lop">
                         <option value="">--</option>
-                        <option th:each="lopStr : ${lopList}" th:value="${lopStr}" th:utext="${lopStr}"></option>
+                        <option th:each="lopStr : ${lopList}" th:value="${lopStr}" th:utext="${lopStr}" th:selected="${lopStr.equals(lop)}"></option>
                     </select>
-                    <input id="search" type="button" th:value="Xem" class="btn btn-success btn-sm"/>
+                    <input id="search" type="button" th:value="Xem" class="btn btn-success"/>
                 </div>
             </div>
         </form>
@@ -35,6 +35,8 @@
                 <tr>
                     <th class="text-center">Stt</th>
                     <th class="text-center">Họ tên</th>
+                    <th class="text-center">KHÓA HỌC</th>
+                    <th class="text-center">P.thu</th>
                     <th class="text-center">Ngày nộp 1</th>
                     <th class="text-center">Học phí<br>nộp 1</th>
                     <th class="text-center">Ngày nộp 2</th>
@@ -43,9 +45,11 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="item : ${hocvienList}">
-                    <td class="text-right" th:text="${item.id}">Id</td>
+                <tr th:each="item,iter : ${hocvienList}">
+                    <td class="text-right" th:text="${iter.index + 1}">Id</td>
                     <td th:text="${item.hoTen}">Họ tên</td>
+                    <td th:text="${item.lop}">KH</td>
+                    <td th:text="${item.soPhieuThu}">KH</td>
                     <td class="text-right" th:text="${#dates.format(item.ngayGioThu, 'dd/MM/yyyy')}"></td>
                     <td class="text-right" th:text="${#numbers.formatDecimal(item.thu,3, 'POINT',0, 'COMMA')}"></td>
                     <td class="text-right" th:text="${item.phieuThu2 != null ? #dates.format(item.phieuThu2.ngayGioThu, 'dd/MM/yyyy') : ''}"></td>
@@ -74,7 +78,7 @@
 <script>
     $("#search").click(function(){
         var lop = $("#lop").val();
-        window.open('class?lop='+lop);
+        window.location = 'class?lop='+lop;
     });
 </script>
 </body>
