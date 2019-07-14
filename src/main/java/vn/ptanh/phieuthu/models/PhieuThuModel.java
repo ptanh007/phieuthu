@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
@@ -36,6 +37,10 @@ public class PhieuThuModel {
     BigDecimal tienConLai;
 
     boolean deleted;
+
+
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
     Timestamp ngayGioThu;
+
     Timestamp ngayGioTao;
 }

@@ -7,16 +7,20 @@
     <!-- Bootstrap core CSS -->
     <link href="../static/css/bootstrap.css" rel="stylesheet" th:href="@{/css/bootstrap.css}"/>
     <link href="../static/css/bootstrap-datepicker.css" rel="stylesheet" th:href="@{/css/bootstrap-datepicker.min.css}"/>
+    <style>
+        .table th {padding: 0!important;}
+    </style>
 </head>
 <body>
 <div class="main">
     <div class="container">
-        <form autocomplete="off" action="#" th:action="@{/add}" th:object="${phieuthuModel}" method="post" id="invoiceForm">
-            <div class="row">
-                <div class="col-md-8 order-md-1">
+
+        <div class="row">
+            <div class="col-md-8 order-md-1">
+                <form autocomplete="off" action="#" th:action="@{/add}" th:object="${searchModel}" method="post" id="Form">
                     <div class="row">
                         <div class="col-md-6">
-                            <h4>Học viên</h4>
+                            <h4></h4>
                         </div>
                         <div class="col-md-6 text-right">
                             <small class="ml-0"><a href="/">Trở về Bảng theo dõi</a></small>
@@ -24,41 +28,99 @@
                     </div>
                     <div class="row">
                         <div class="col-md-6 mb-3">
-                            <label>KHÓA<span style="color: red;">*</span><small>Vd: B19-19, B1TD19-19</small></label>
+                            <label>KHÓA<small>Vd: B19-19, B1TD19-19</small></label>
                             <input class="form-control" type="text" th:field="*{lop}" name="lop"/>
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label>Họ tên<span style="color: red;">*</span></label>
-                            <input class="form-control" type="text" th:field="*{hoTen}" name="hoTen"/>
+                            <label>Ngày thu:</label>
+                            <div class="input-group date datepicker mydatepicker" data-provide="datepicker">
+                                <input type="text" class="form-control" name="ngayGioThu" th:value="*{#dates.format(ngayGioThu,'dd/MM/yyyy')}">
+                                <div class="input-group-addon">
+                                    <span class="glyphicon glyphicon-th"></span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-md-6 mb-3">
-                            <label>Ngày sinh:</label>
-                            <input type="text" class="form-control" th:value="*{ngaySinh}" name="ngaySinh" maxlength="4"/>
-                            <!--<div class="input-group-addon">
-                                <span class="glyphicon glyphicon-th"></span>
-                            </div>-->
+                            <label>Họ tên</label>
+                            <input class="form-control" type="text" th:field="*{hoTen}" name="hoTen"/>
                         </div>
                     </div>
-                    <div>
-                        <button type="submit" name="action" value="search" class="btn btn-primary">Tìm kiếm</button>
-                        <button value="add" class="btn btn-secondary" onclick="window.location.href='/add'">Reset</button>
+                    <div class="row">
+                        <button type="submit" name="action" value="search" class="btn btn-primary btn-sm mr-2">Tìm kiếm</button>
+                        <button value="add" class="btn btn-secondary btn-sm" onclick="window.location.href='/add'">Reset</button>
                     </div>
-                </div>
-                <div class="col-md-4 order-md-2 mb-4">
-                    <h4>Đóng tiền lần đầu</h4>
+                    <div class="row">
+                        <h5>Bảng 1 & đóng tiền lần 2</h5>
+                        <table class="table table-bordered table-striped table-hover no-footer dataTable" id="notCompleteTable">
+                            <thead>
+                            <tr>
+                                <th class="text-center">Ph.<br/>thu</th>
+                                <th class="text-center">Ngày<br/>nộp</th>
+                                <th class="text-center">Họ tên</th>
+                                <th class="text-center">KHÓA HỌC</th>
+                                <th class="text-center">Học phí</th>
+                                <th class="text-center">Đã nộp</th>
+                                <th class="text-center">Còn lại</th>
+                                <th class="text-center">Nộp lần 2</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="item : ${searchlist}">
+                                <td class="text-right" th:text="${item.soPhieuThu}">Id</td>
+                                <td class="text-right" th:text="${#dates.format(item.ngayGioThu,'dd.MM.yyyy')}"></td>
+                                <td th:text="${item.hoTen}">Họ tên</td>
+                                <td class="text-center" th:text="${item.lop}">KHÓA HỌC</td>
+                                <td class="text-right" th:text="${#numbers.formatDecimal(item.tienPhaiNop,0, 'POINT',0, 'COMMA')}"></td>
+                                <td class="text-right" th:text="${#numbers.formatDecimal(item.thu,0, 'POINT',0, 'COMMA')}"></td>
+                                <td class="text-right" th:text="${#numbers.formatDecimal(item.tienConLai,0, 'POINT',0, 'COMMA')}"></td>
+                                <td class="text-center">
+                                    <a class="complete">click</span></a>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+
+                    </div>
+                </form>
+            </div>
+
+            <div class="col-md-4 order-md-2 mb-4">
+                <h4>Đóng tiền lần đầu</h4>
+                <form autocomplete="off" action="#" th:action="@{/add}" th:object="${phieuthuModel}" method="post" id="invoiceForm">
                     <ul class="list-group mb-3">
                         <li class="list-group-item d-flex justify-content-between lh-condensed">
                             <div>
-                                <h6 class="my-0">Tiền phải nộp</h6>
+                                <h6 class="my-0">Khóa<span style="color: red;">*</span></h6>
+                                <!--<small class="text-muted">Brief description</small>-->
+                            </div>
+                            <input type="text" name="lop"></input>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between lh-condensed">
+                            <div>
+                                <h6 class="my-0">Họ tên<span style="color: red;">*</span></h6>
+                                <!--<small class="text-muted">Brief description</small>-->
+                            </div>
+                            <input type="text" name="hoTen"></input>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between lh-condensed">
+                            <div>
+                                <h6 class="my-0">Năm sinh</h6>
+                                <!--<small class="text-muted">Brief description</small>-->
+                            </div>
+                            <input type="text" name="ngaySinh" maxlength="4"></input>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between lh-condensed">
+                            <div>
+                                <h6 class="my-0">Tiền phải nộp<span style="color: red;">*</span></h6>
                                 <!--<small class="text-muted">Brief description</small>-->
                             </div>
                             <input type="text" class="text-muted text-right money" name="tienPhaiNop" id="tienphainop"></input>
                         </li>
                         <li class="list-group-item d-flex justify-content-between lh-condensed">
                             <div>
-                                <h6 class="my-0">Tiền nộp</h6>
+                                <h6 class="my-0">Tiền nộp<span style="color: red;">*</span></h6>
                                 <!--<small class="text-muted">Brief description</small>-->
                             </div>
                             <input type="text" class="text-muted text-right money" name="thu" id="thu"/>
@@ -72,11 +134,12 @@
                             <button class="btn btn-primary" type="button" id="btnAdd">Đóng tiền</button>
                         </li>
                     </ul>
-                </div>
+                </form>
             </div>
-        </form>
-        <h5>Danh sách nộp lần 1</h5>
-        <div class="row">
+        </div>
+
+
+        <!--<div class="row">
             <div class="col-md-8 order-md-1">
                 <table class="table table-bordered table-striped table-hover no-footer dataTable" id="notCompleteTable">
                     <thead>
@@ -127,7 +190,7 @@
                     </tbody>
                 </table>
             </div>
-        </div>
+        </div>-->
     </div>
 
     <div class="modal fade" id="modalRegistInvoice" role="dialog" style="display: none;">
@@ -238,7 +301,61 @@
         return true;
     });
 
+    $("#invoiceForm input[name*=lop]").blur(function(event){
+        var lopStr = $(event.target).val();
+        if(!lopStr.match(/[B1TD|B1|B|C|D|P]\d{1,2}-\d{1,2}/g)){
+            $("#tienphainop").text('0');
+            $("#thu").val('0');
+            $("#tienconlai").text('0');
+            console.log("Khong hop le");
+        } else {
+            if(lopStr.startsWith("B1TD")) {
+                tienthuBanDau("9.500.000");
+                console.log("lopBTD");
+            } else if (lopStr.startsWith("BC")) {
+                tienthuBanDau("3.000.000");
+            } else if (lopStr.startsWith("BD")) {
+                tienthuBanDau("4.000.000");
+            } else if (lopStr.startsWith("CD")) {
+                tienthuBanDau("3.500.000");
+            } else if (lopStr.startsWith("B")) {
+                if(parseInt(lopStr.substr(1,2)) % 2 == 0){
+                    tienthuBanDau("7.000.000");
+                }else {
+                    tienthuBanDau("7.500.000");
+                }
+            } else if (lopStr.startsWith("D")) {
+                tienthuBanDau("10.000.000");
+            } else if (lopStr.startsWith("C")) {
+                tienthuBanDau("10.500.000");
+            }
+        }
+    });
+
+    $("#thu").blur(function(event){
+        var conlai = $("#tienphainop").val().replace(/\./g,"") - $("#thu").val().replace(/\./g,"");
+        var conlaiTxt = formatNumber(conlai);
+        $("#tienconlai").val(conlai);
+        $("#tienconlaiTxt").text(conlaiTxt);
+    });
+
+    function tienthuBanDau(hocphi){
+        $("#tienphainop").val(hocphi);
+        $("#thu").val(hocphi);
+        $("#tienconlai").val('0');
+        $("#tienconlaiTxt").text('0');
+    }
+
     $('#btnAdd').on('click', function() {
+        //validate
+        if(!$("#invoiceForm input[name*=lop]").val()){
+            return;
+        }
+            if(!$("#invoiceForm input[name*=hoTen]").val()){
+            return;
+        }
+
+        //init modal
         $('#reportRegistMessage').hide();
         $('#modalRegistInvoice label[name*=lopTxt]').text($("#invoiceForm input[name*=lop]").val());
         $('#modalRegistInvoice label[name*=hotenTxt]').text($("#invoiceForm input[name*=hoTen]").val());
@@ -254,7 +371,6 @@
         var dataReq = $("#invoiceForm").serialize();
         //replace thoundsand separator
         dataReq = dataReq.replace(/(\d+)\.(?=\d{3}(\D|$))/g, "$1");
-        //TODO validation
 
         // save invoice
         $.post('/thulan1',

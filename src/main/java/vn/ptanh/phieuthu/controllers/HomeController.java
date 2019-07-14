@@ -14,6 +14,7 @@ import vn.ptanh.phieuthu.entities.PhieuThu2;
 import vn.ptanh.phieuthu.models.NhatKy2Model;
 import vn.ptanh.phieuthu.models.NhatKyModel;
 import vn.ptanh.phieuthu.models.PhieuThuModel;
+import vn.ptanh.phieuthu.models.SearchModel;
 import vn.ptanh.phieuthu.repositories.PhieuThu2Repository;
 import vn.ptanh.phieuthu.repositories.PhieuThuRepository;
 import vn.ptanh.phieuthu.services.PhieuThuService;
@@ -110,26 +111,30 @@ public class HomeController {
 
     /***
      *
-     * @param phieuthuModel
+     * @param searchModel
      * @param model
      * @return
      */
     @RequestMapping("/add")
-    public String add(@ModelAttribute PhieuThuModel phieuthuModel,@RequestParam(value="action", required = false) String action, Model model)
+    public String add(@ModelAttribute SearchModel searchModel, @RequestParam(value="action", required = false) String action, Model model)
     {
-        if(phieuthuModel==null){
-            phieuthuModel = new PhieuThuModel();
+        if(searchModel==null){
+            searchModel = new SearchModel();
         }
 
         if(action != null && action.equals("search")){
-            List<PhieuThu> thuList = phieuThuRepo.findByDongLan1(phieuthuModel.getHoTen(), phieuthuModel.getLop());
+            Date ngayGioThu = null;
+            if(searchModel.getNgayGioThu()!=null){
+                ngayGioThu = new Date(searchModel.getNgayGioThu().getTime());
+            }
+            List<PhieuThu> thuList = phieuThuRepo.findByDongLan1(searchModel.getHoTen(), searchModel.getLop(), ngayGioThu);
             model.addAttribute("searchlist", thuList);
-            model.addAttribute("latest", getLatestList());
-            model.addAttribute("phieuthuModel", phieuthuModel);
+            //model.addAttribute("latest", getLatestList());
+            model.addAttribute("phieuthuModel", searchModel);
             return "add";
         }
-        model.addAttribute("phieuthuModel", phieuthuModel);
-        model.addAttribute("latest", getLatestList());
+        model.addAttribute("phieuthuModel", searchModel);
+        //model.addAttribute("latest", getLatestList());
         return "add";
     }
 

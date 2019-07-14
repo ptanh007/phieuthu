@@ -58,9 +58,9 @@ public interface PhieuThuRepository extends JpaRepository<PhieuThu, Long> {
      * @param lop
      * @return
      */
-    @Query("SELECT p FROM PhieuThu p LEFT JOIN p.phieuThu2 p2 WHERE (:ten is null OR p.hoTen LIKE %:ten%) AND (:lop is null OR p.lop LIKE %:lop%) AND p.thu < p.tienPhaiNop AND p.tienConLai > 0 " +
+    @Query("SELECT p FROM PhieuThu p LEFT JOIN p.phieuThu2 p2 WHERE (:ten is null OR p.hoTen LIKE %:ten%) AND (:lop is null OR p.lop LIKE %:lop%) AND (:ngayThu is null OR p.ngayGioThu = :ngayThu) AND p.thu < p.tienPhaiNop AND p.tienConLai > 0 " +
             "AND p2 is null ORDER BY p.id")
-    List<PhieuThu> findByDongLan1(@Param("ten")String hoten, @Param("lop")String lop);
+    List<PhieuThu> findByDongLan1(@Param("ten")String hoten, @Param("lop")String lop, @Param("ngayThu")Date ngayThu);
 
 
 
