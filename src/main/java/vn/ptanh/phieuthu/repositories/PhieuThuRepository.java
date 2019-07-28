@@ -22,36 +22,36 @@ public interface PhieuThuRepository extends JpaRepository<PhieuThu, Long> {
 
     /**
      * Đóng tạm theo ngay
-     * @param ngaytheodoi
+     * @param ngaythu
      * @return
      */
     @Query("SELECT p FROM PhieuThu p WHERE p.ngayGioThu  = ?1 AND p.tienConLai > 0 ORDER BY id")
-    List<PhieuThu> findByNgayThu1(Date ngaytheodoi);
+    List<PhieuThu> findByNgayThu1(Date ngaythu);
 
     /**
      * Đóng đủ lần 2 theo ngày
-     * @param ngaytheodoi
+     * @param ngaythu
      * @return
      */
     @Query("SELECT p FROM PhieuThu p JOIN p.phieuThu2 p2 WHERE p2.ngayGioThu = ?1 ORDER BY p2.id")
-    List<PhieuThu> findByNgayThu2(Date ngaytheodoi);
+    List<PhieuThu> findByNgayThu2(Date ngaythu);
 
     /**
      * Đóng đủ lần 1 theo ngày
-     * @param ngaytheodoi
+     * @param ngaythu
      * @return
      */
     @Query("SELECT p FROM PhieuThu p WHERE p.ngayGioThu = ?1 AND p.thu = p.tienPhaiNop AND p.tienConLai = 0 ORDER BY id")
-    List<PhieuThu> findByNgayThu3(Date ngaytheodoi);
+    List<PhieuThu> findByNgayThu3(Date ngaythu);
 
 
     /**
      * Đóng tạm & 1 lần theo ng
-     * @param ngaytheodoi
+     * @param ngaythu
      * @return
      */
     @Query("SELECT p FROM PhieuThu p WHERE p.ngayGioThu  = ?1 ORDER BY id")
-    List<PhieuThu> findByNgayThu(Date ngaytheodoi);
+    List<PhieuThu> findByNgayThu(Date ngaythu);
     /**
      * DS Đóng tạm
      * @param hoten

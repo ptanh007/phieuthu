@@ -19,9 +19,12 @@ public class PhieuThuService {
     PhieuThuRepository phieuThuRepos;
 
     public PhieuThu dangkyPhieuThu(PhieuThu phieuThu){
-
         int year = phieuThu.getNgayGioTao().toLocalDateTime().toLocalDate().getYear();
         YearSequence yearSequence = sequenceRepo.findById(year).orElse(new YearSequence(year,0));
+        //TODO: default is max
+        if(yearSequence.getNextVal() == 0){
+
+        }
         yearSequence.setNextVal(yearSequence.getNextVal()+1);
         sequenceRepo.save(yearSequence);
 

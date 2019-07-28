@@ -18,7 +18,7 @@
         <div class="row">
             <div class="col-md-6"><h4>Bảng theo dõi</h4></div>
             <div class="col-md-6 text-right">
-                <small class="mr-2"><a href="/add">Đóng tiền</a></small> | <small class="ml-2"><a href="/class">DS KHÓA</a></small>
+                <small class="mr-2"><a href="/add">Đóng tiền lần 2</a></small> | <small class="ml-2"><a href="/class">DS KHÓA</a></small>
             </div>
         </div>
         <form id="class" th:action="@{/}" th:method="GET">
@@ -31,7 +31,7 @@
                             <span class="glyphicon glyphicon-th"></span>
                         </div>
                     </div>
-                    <input type="submit" name="search" th:value="Lọc" class="btn btn-success"/>
+                    <input type="submit" name="search" th:value="Xem" class="btn btn-success"/>
                 </div>
             </div>
         </form>
@@ -41,6 +41,7 @@
                 <li class="active"><a class="nav-link active" data-toggle="tab" href="#home">Bảng 1</a></li>
                 <li><a  class="nav-link" data-toggle="tab" href="#menu1">Bảng 2</a></li>
                 <li><a class="nav-link" data-toggle="tab" href="#nhatkythu2">Nhật ký thu</a></li>
+                <li><a class="nav-link" data-toggle="tab" href="#menu3">Đóng tiền </a></li>
             </ul>
 
             <!-- Tab panes -->
@@ -133,8 +134,6 @@
                         </tbody>
                     </table>
                 </div>
-
-
                 <div role="tabpanel" class="tab-pane fade" id="nhatkythu2">
                     <!--nhat ky thu2-->
                     <table class="table table-bordered table-striped table-hover no-footer dataTable">
@@ -189,6 +188,118 @@
                         </tbody>
                     </table>
                 </div>
+                <div role="tabpanel" class="tab-pane fade" id="menu3">
+                    <div class="col-md-4 order-md-2 mb-4">
+                        <h4>Đóng tiền lần đầu</h4>
+                        <form autocomplete="off" action="#" th:action="@{/add}" method="post" id="invoiceForm">
+                            <ul class="list-group mb-3">
+                                <li class="list-group-item d-flex justify-content-between lh-condensed">
+                                    <div>
+                                        <h6 class="my-0">Khóa<span style="color: red;">*</span></h6>
+                                        <!--<small class="text-muted">Brief description</small>-->
+                                    </div>
+                                    <input type="text" name="lop"></input>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between lh-condensed">
+                                    <div>
+                                        <h6 class="my-0">Họ tên<span style="color: red;">*</span></h6>
+                                        <!--<small class="text-muted">Brief description</small>-->
+                                    </div>
+                                    <input type="text" name="hoTen"></input>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between lh-condensed">
+                                    <div>
+                                        <h6 class="my-0">Năm sinh</h6>
+                                        <!--<small class="text-muted">Brief description</small>-->
+                                    </div>
+                                    <input type="text" name="ngaySinh" maxlength="4"></input>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between lh-condensed">
+                                    <div>
+                                        <h6 class="my-0">Tiền phải nộp<span style="color: red;">*</span></h6>
+                                        <!--<small class="text-muted">Brief description</small>-->
+                                    </div>
+                                    <input type="text" class="text-muted text-right money" name="tienPhaiNop" id="tienphainop"></input>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between lh-condensed">
+                                    <div>
+                                        <h6 class="my-0">Tiền nộp<span style="color: red;">*</span></h6>
+                                        <!--<small class="text-muted">Brief description</small>-->
+                                    </div>
+                                    <input type="text" class="text-muted text-right money" name="thu" id="thu"/>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between lh-condensed">
+                                    <div>
+                                        <h6 class="my-0" id="tienconl">Tiền còn lại: <label id="tienconlaiTxt"></label></h6>
+                                        <small class="text-muted">Tiền còn lại</small>
+                                        <input type="hidden" name="tienConLai" id="tienconlai"/>
+                                    </div>
+                                    <button class="btn btn-primary" type="button" id="btnAdd">Đóng tiền</button>
+                                </li>
+                            </ul>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal Dong tien lan 1 -->
+    <div class="modal fade" id="modalRegistInvoice" role="dialog" style="display: none;">
+        <div class="modal-dialog" style="width:1000px;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Xác nhận thu tiền</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true" value="">×</button>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal" id="formModal">
+                        <div id="reportRegistMessage" class="alert" style="display:none;"></div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label>KHÓA HỌC    :</label>
+                            </div>
+                            <div class="col-md-8">
+                                <label name="lopTxt"></label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label>Họ và tên :</label>
+                            </div>
+                            <div class="col-md-8">
+                                <label class="font-weight-bold" name="hotenTxt"> </label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label>Số tiền  :</label>
+                            </div>
+                            <div class="col-md-8">
+                                <label name="thuTxt"></label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label>Số tiền(còn lại):</label>
+                            </div>
+                            <div class="col-md-8">
+                                <label name="tienconlaiTxt"></label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label>Số tiền phải nộp:</label>
+                            </div>
+                            <div class="col-md-8">
+                                <label name="tienphainopTxt"></label>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" id="btnSave" value="">Lưu</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal" id="btnCancel" value="">Hủy</button>
+                </div>
             </div>
         </div>
     </div>
@@ -199,6 +310,105 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script th:src="@{/js/bootstrap.js}"></script>
 <script th:src="@{/js/bootstrap-datepicker.min.js}"></script>
+<script th:src="@{/js/jquery.mask.min.js}"></script>
 <script th:src="@{/js/common.js}"></script>
+<script type="application/javascript">
+    $('input.money').mask('000.000.000.000', {reverse: true});
+
+    /******************invoiceForm : dong tien lan 1 *********************/
+    $('#invoiceForm input[name*=ngaySinh]').on('keypress', function(e) {
+        var charCode = (e.which) ? e.which : event.keyCode
+        if (charCode < 48 || charCode > 57) {
+            return false;
+        }
+        return true;
+    });
+
+    $("#invoiceForm input[name*=lop]").blur(function(event){
+        var lopStr = $(event.target).val();
+        if(!lopStr.match(/[B1TD|B1|B|C|D|P]\d{1,2}-\d{1,2}/g)){
+            $("#tienphainop").text('0');
+            $("#thu").val('0');
+            $("#tienconlai").text('0');
+            console.log("Khong hop le");
+        } else {
+            if(lopStr.startsWith("B1TD")) {
+                tienthuBanDau("9.500.000");
+                console.log("lopBTD");
+            } else if (lopStr.startsWith("BC")) {
+                tienthuBanDau("3.000.000");
+            } else if (lopStr.startsWith("BD")) {
+                tienthuBanDau("4.000.000");
+            } else if (lopStr.startsWith("CD")) {
+                tienthuBanDau("3.500.000");
+            } else if (lopStr.startsWith("B")) {
+                if(parseInt(lopStr.substr(1,2)) % 2 == 0){
+                    tienthuBanDau("7.000.000");
+                }else {
+                    tienthuBanDau("7.500.000");
+                }
+            } else if (lopStr.startsWith("D")) {
+                tienthuBanDau("10.000.000");
+            } else if (lopStr.startsWith("C")) {
+                tienthuBanDau("10.500.000");
+            }
+        }
+    });
+    // tienconlai = tienphainop - tienthu
+    $("#thu").blur(function(event){
+        var conlai = $("#tienphainop").val().replace(/\./g,"") - $("#thu").val().replace(/\./g,"");
+        var conlaiTxt = formatNumber(conlai);
+        $("#tienconlai").val(conlai);
+        $("#tienconlaiTxt").text(conlaiTxt);
+    });
+    // reset ban dau
+    function tienthuBanDau(hocphi){
+        $("#tienphainop").val(hocphi);
+        $("#thu").val(hocphi);
+        $("#tienconlai").val('0');
+        $("#tienconlaiTxt").text('0');
+    }
+    /*** modal thu lan dau ********************/
+    //
+    $('#btnAdd').on('click', function() {
+        //validate
+        if(!$("#invoiceForm input[name*=lop]").val()){
+            return;
+        }
+        //validate
+        if(!$("#invoiceForm input[name*=hoTen]").val()){
+            return;
+        }
+
+        //init modal
+        $('#reportRegistMessage').hide();
+        $('#modalRegistInvoice label[name*=lopTxt]').text($("#invoiceForm input[name*=lop]").val());
+        $('#modalRegistInvoice label[name*=hotenTxt]').text($("#invoiceForm input[name*=hoTen]").val());
+        $('#modalRegistInvoice label[name*=thuTxt]').text($("#invoiceForm input[name*=thu]").val());
+        $('#modalRegistInvoice label[name*=tienphainopTxt]').text($("#invoiceForm input[name*=tienPhaiNop]").val());
+        $('#modalRegistInvoice label[name*=tienconlaiTxt]').text($("#invoiceForm #tienconlaiTxt").text());
+        $("#invoiceForm").serialize();
+
+        $('#modalRegistInvoice').modal('show');
+    });
+    $('#btnSave').on('click', function() {
+        var dataReq = $("#invoiceForm").serialize();
+        //replace thoundsand separator
+        dataReq = dataReq.replace(/(\d+)\.(?=\d{3}(\D|$))/g, "$1");
+
+        // save invoice
+        $.post('/thulan1',
+            dataReq,
+            function(returnData, status) {
+                openInvoice(returnData);
+                location.reload();
+            }
+        );
+    });
+
+    function openInvoice(id) {
+        window.open('phieuthu?id='+id, '_blank');
+    }
+</script>
 </body>
 </html>

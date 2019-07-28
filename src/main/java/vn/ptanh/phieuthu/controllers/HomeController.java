@@ -3,8 +3,6 @@ package vn.ptanh.phieuthu.controllers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 import vn.ptanh.phieuthu.entities.PhieuThu;
 import vn.ptanh.phieuthu.entities.PhieuThu2;
 import vn.ptanh.phieuthu.models.NhatKy2Model;
-import vn.ptanh.phieuthu.models.NhatKyModel;
 import vn.ptanh.phieuthu.models.PhieuThuModel;
 import vn.ptanh.phieuthu.models.SearchModel;
 import vn.ptanh.phieuthu.repositories.PhieuThu2Repository;
@@ -23,8 +20,10 @@ import vn.ptanh.phieuthu.utils.CommonUtil;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * @author tuanhpham.
@@ -138,6 +137,26 @@ public class HomeController {
         return "add";
     }
 
+    @PostMapping("/edit")
+    @ResponseBody
+    public String edit(long id, String hoTen, String lop, @DateTimeFormat(pattern = "dd/MM/yyyy") Date ngayThu){
+        //save phieu thu
+        Timestamp current = new Timestamp(new Date().getTime());
+
+        //get db object
+        PhieuThu phieuThu = phieuThuRepo.findById(id).get();
+        if(phieuThu == null){
+            return "ERROR 404";
+        }
+        //update
+        phieuThu.setHoTen(hoTen);
+        phieuThu.setLop(lop);
+        phieuThu.setNgayGioThu(ngayThu);
+
+        phieuThu = phieuThuRepo.save(phieuThu);
+        //tra ve id
+        return phieuThu.getId().toString();
+    }
 
     @PostMapping("/thulan1")
     @ResponseBody
@@ -162,50 +181,6 @@ public class HomeController {
         phieuThu = phieuThuService.dangkyPhieuThu(phieuThu);
         //tra ve id
         return phieuThu.getId().toString();
-    }
-
-    private List<PhieuThuModel> getLatestList() {
-        List<PhieuThu> phieuThuList = phieuThuRepo.findAll(PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "ngayGioTao"))).getContent();
-        List<PhieuThu> phieuThu2List = phieuThuRepo.findAll(PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "phieuThu2.ngayGioTao"))).getContent();
-
-        List<PhieuThuModel> p1List = phieuThuList.stream()
-                .map( phieuThu -> new PhieuThuModel(
-                        phieuThu.getId(),
-                        phieuThu.getSoPhieuThu(),
-                        phieuThu.getHoTen(),
-                        phieuThu.getNgaySinh(),
-                        phieuThu.getLop(),
-                        null,
-                        phieuThu.getTienPhaiNop(),
-                        phieuThu.getThu(),
-                        null,
-                        phieuThu.getTienConLai(),
-                        false,
-                        new Timestamp(phieuThu.getNgayGioThu().getTime()),
-                        phieuThu.getNgayGioTao()
-                ))
-                .collect(Collectors.toList());
-
-        /*List<PhieuThuModel> p2List = phieuThu2List.stream()
-                .map( phieuThu -> new PhieuThuModel(
-                        phieuThu.getId(),
-                        phieuThu.getHoTen(),
-                        phieuThu.getNgaySinh(),
-                        phieuThu.getLop(),
-                        null,
-                        phieuThu.getTienPhaiNop(),
-                        phieuThu.getPhieuThu2().getThu(),
-                        null,
-                        BigDecimal.ZERO,
-                        false,
-                        new Timestamp(phieuThu.getPhieuThu2().getNgayGioThu().getTime()),
-                        phieuThu.getPhieuThu2().getNgayGioTao()
-                ))
-                .collect(Collectors.toList());
-        p1List.addAll(p2List);*/
-        p1List.sort(Comparator.comparing(PhieuThuModel::getNgayGioTao));
-
-        return p1List.stream().limit(10).collect(Collectors.toList());
     }
 
     /**
@@ -241,6 +216,7 @@ public class HomeController {
 
         return "inPhieuThu";
     }
+
 
 
     private PhieuThuModel convertToModel(PhieuThu phieuThu) {
@@ -281,51 +257,6 @@ public class HomeController {
                 phieuThu.getPhieuThu2().getNgayGioTao(),
                 new Timestamp(phieuThu.getPhieuThu2().getNgayGioThu().getTime())
         );
-    }
-
-    private List<NhatKyModel> convertToNhatKy(List<PhieuThu> phieuThuList, Date ngay) {
-        List<NhatKyModel> modelList = new ArrayList<>();
-        phieuThuList.forEach( phieuThu -> {
-            if(ngay.equals(phieuThu.getNgayGioThu())) {
-                // thu lan 1
-                NhatKyModel model = new NhatKyModel(
-                        phieuThu.getId(),
-                        phieuThu.getSoPhieuThu(),
-                        phieuThu.getHoTen(),
-                        phieuThu.getNgaySinh(),
-                        phieuThu.getLop(),
-                        phieuThu.getTienPhaiNop(),
-                        phieuThu.getTienPhaiNop().equals(phieuThu.getThu()) ? BigDecimal.ZERO : phieuThu.getThu(),  //hocphi=thu, lan1=0
-                        phieuThu.getTienPhaiNop().equals(phieuThu.getThu()) ? phieuThu.getThu(): BigDecimal.ZERO,  //hocphi=thu, lan2=thu
-                        phieuThu.getThu(),
-                        phieuThu.getTienConLai(),
-                        new Timestamp(phieuThu.getNgayGioThu().getTime()),
-                        phieuThu.getNgayGioTao(),
-                        null
-                        );
-                modelList.add(model);
-            }
-            if (phieuThu.getPhieuThu2() !=null && ngay.equals(phieuThu.getPhieuThu2().getNgayGioThu())){
-                // phieu thu lan 2
-                NhatKyModel model = new NhatKyModel(
-                        phieuThu.getId(),
-                        phieuThu.getSoPhieuThu(),
-                        phieuThu.getHoTen(),
-                        phieuThu.getNgaySinh(),
-                        phieuThu.getLop(),
-                        phieuThu.getTienPhaiNop(),
-                        phieuThu.getThu(),
-                        phieuThu.getPhieuThu2().getThu(),
-                        phieuThu.getPhieuThu2().getThu(),
-                        BigDecimal.ZERO,
-                        new Timestamp(phieuThu.getPhieuThu2().getNgayGioThu().getTime()),
-                        phieuThu.getPhieuThu2().getNgayGioTao(),
-                        null
-                );
-                modelList.add(model);
-            }
-        });
-        return modelList;
     }
 
     private List<NhatKy2Model> convertToNhatKy2(List<PhieuThu> phieuThuList, Date ngay) {
